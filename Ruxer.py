@@ -73,6 +73,6 @@ try:
  y=argv[2]
  conditions(x, y)
 except:
- print(f' {GREEN}[*]{WHITE} Faltan argumentos...\n {GREEN}python {script_name} -u [LINK]{WHITE}\n => Analiza un LINK\n\n {GREEN}python {script_name} -f [FILE]\n Ejemplo: python {script_name} -f .\file (WINDOWS)\n Ejemplo: python {script_name} -f ./file (LINUX){WHITE}\n => Analiza cualquier FICHERO')
+ print(f' {GREEN}[*]{WHITE} Faltan argumentos...\n {GREEN}python {script_name} -u [LINK]{WHITE}\n => Analiza un LINK\n\n {GREEN}python {script_name} -f [FILE]\n Ejemplo: python {script_name} -f .\\file (WINDOWS)\n Ejemplo: python {script_name} -f ./file (LINUX){WHITE}\n => Analiza cualquier FICHERO')
 # END ARGUMENTS #
 
