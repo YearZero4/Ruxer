@@ -1,5 +1,5 @@
 # ANALISIS DE ARCHIVO Y LINKS MALICIOSOS CON VIRUS TOTAL #
-import os, sys, requests, hashlib, pyfiglet
+import os, sys, requests, hashlib, pyfiglet, time
 from colorama import Fore, init, Style
 init(autoreset=True)
 
@@ -49,12 +49,33 @@ def analizeUrl(link):
   res=response.json()
   showInfo(res, True)
 
+import time
+
 def analizeFile(filename):
- with open(filename, "rb") as f:
-  file_hash = hashlib.sha256(f.read()).hexdigest()
- params = {'apikey': api_key, 'resource': file_hash}
- res = requests.get("https://www.virustotal.com/vtapi/v2/file/report", params=params).json()
- showInfo(res, False)
+ upload=[]
+ while True:
+  try:
+   with open(filename, "rb") as f:
+    file_hash = hashlib.sha256(f.read()).hexdigest()
+   params = {'apikey': api_key, 'resource': file_hash}
+   res = requests.get("https://www.virustotal.com/vtapi/v2/file/report", params=params).json()
+   if not upload:
+    if res.get('response_code') != 1:
+     print(f"{GREEN}[*] Subiendo archivo a VirusTotal...{WHITE}")
+     with open(filename, "rb") as f:
+      files = {'file': (os.path.basename(filename), f)}
+      requests.post('https://www.virustotal.com/vtapi/v2/file/scan', files=files, params={'apikey': api_key})
+     print(f"{GREEN}[*] Analizando... (esto puede tomar 2-3 minutos)\n   Debido a las limitaciones de API_KEY\n   Gratuitas, si posees una API_KEY Premium\n   Cambie la que el script tiene por defecto.{WHITE}")
+     upload.append(True)
+   while True:
+    res = requests.get("https://www.virustotal.com/vtapi/v2/file/report", params=params).json()
+    if res.get('response_code') == 1:
+     showInfo(res, False)
+     return
+    time.sleep(5)
+  except Exception:
+   time.sleep(10)
+   continue
 
 def conditions(option, y):
  if option == '-u':
